@@ -74,7 +74,7 @@ document.body.insertAdjacentHTML('beforeend',`
   <div class="hist"><span class="time">21:07</span><span style="color:#b8ff3c;font-weight:700">dayone_grinder</span>: pulled this day 1 btw</div>
 </div></div></div></div>
 <aside class="chat">${chat.map(msg).join('')}</aside>`);
-window.chrome={runtime:{getManifest:()=>({version:'1.0.1'}),onMessage:{addListener(){}},
+window.chrome={runtime:{getManifest:()=>({version:'1.1.0'}),onMessage:{addListener(){}},
   sendMessage:async m=>m.type==='npv:status'?{ready:true}:{ok:true,value:{login:m.login,cards:displays[m.login]||[]}}}};
 </script>
 <script src="../extension/core.js"></script><script src="../extension/chat.js"></script>

@@ -1,7 +1,9 @@
 (() => {
+  // Firefox provides the promise-based `browser` namespace; Chrome provides `chrome` (and `browser` in newer versions).
+  const api = globalThis.browser ?? globalThis.chrome;
   if (!location.pathname.endsWith("/video_overlay.html")) return;
   const pending = new Map();
-  const announce = () => chrome.runtime.sendMessage({ type: "npv:frame-ready" }).catch(() => {});
+  const announce = () => api.runtime.sendMessage({ type: "npv:frame-ready" }).catch(() => {});
   window.addEventListener("npv-showcase:ready:v1", event => {
     try { if (JSON.parse(event.detail).ready) announce(); } catch {}
   });
@@ -14,8 +16,8 @@
     pending.delete(reply.id);
     request.respond(reply);
   });
-  chrome.runtime.onMessage.addListener((message, sender, respond) => {
-    if (sender.id !== chrome.runtime.id || message?.type !== "npv:frame-lookup") return;
+  api.runtime.onMessage.addListener((message, sender, respond) => {
+    if (sender.id !== api.runtime.id || message?.type !== "npv:frame-lookup") return;
     const id = crypto.randomUUID();
     const timer = setTimeout(() => {
       pending.delete(id);

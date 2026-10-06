@@ -1,4 +1,6 @@
 (() => {
+  // Firefox provides the promise-based `browser` namespace; Chrome provides `chrome` (and `browser` in newer versions).
+  const api = globalThis.browser ?? globalThis.chrome;
   const USER = '[data-a-target="chat-message-username"][data-a-user], .seventv-chat-user-username';
   const POPUP = '[data-a-target="viewer-card"], [data-test-selector="viewer-card"], .viewer-card, .seventv-user-card';
   const FRESH = 15 * 60000;
@@ -75,12 +77,12 @@
     return { v: 1, displays, ids: Object.fromEntries(ids) };
   }
   function scheduleSave() {
-    if (!chrome.storage?.local || saveTimer) return;
+    if (!api.storage?.local || saveTimer) return;
     saveTimer = setTimeout(async () => {
       saveTimer = null;
       try {
         // Merge with other Twitch tabs' saves; the newest result per viewer wins.
-        const stored = (await chrome.storage.local.get(SAVED))[SAVED];
+        const stored = (await api.storage.local.get(SAVED))[SAVED];
         const mine = savedState();
         const now = Date.now();
         const theirs = Object.entries(stored?.v === 1 ? stored.displays : {})
@@ -89,14 +91,14 @@
           .sort((a, b) => a[1].at - b[1].at).slice(-3000));
         const allIds = Object.fromEntries(Object.entries({ ...(stored?.v === 1 ? stored.ids : {}), ...mine.ids })
           .filter(([, [, at]]) => at + ID_KEEP > now).slice(-5000));
-        await chrome.storage.local.set({ [SAVED]: { v: 1, displays, ids: allIds } });
+        await api.storage.local.set({ [SAVED]: { v: 1, displays, ids: allIds } });
       } catch (error) { console.warn('[NpV] could not save card displays', error); }
     }, 10000);
   }
   async function loadSaved() {
-    if (!chrome.storage?.local) return;
+    if (!api.storage?.local) return;
     try {
-      const stored = (await chrome.storage.local.get(SAVED))[SAVED];
+      const stored = (await api.storage.local.get(SAVED))[SAVED];
       if (stored?.v !== 1) return;
       const now = Date.now();
       for (const [name, [userId, at]] of Object.entries(stored.ids || {})) {
@@ -140,7 +142,7 @@
     queued.delete(name);
     inFlight.set(name, entry.promise);
     let reply;
-    try { reply = await chrome.runtime.sendMessage({ type: "npv:lookup", login: name, userId: ids.get(name)?.[0] }); }
+    try { reply = await api.runtime.sendMessage({ type: "npv:lookup", login: name, userId: ids.get(name)?.[0] }); }
     catch { reply = { ok: false, error: "Reload Twitch to reconnect the extension." }; }
     reply ||= { ok: false, error: "NoPixel did not return a card lookup." };
     lastError = reply.ok ? null : reply.error;
@@ -434,10 +436,10 @@
     const name = username(label);
     if (name) { lastClick = { login: name, at: Date.now() }; scheduleScan(); }
   }, true);
-  chrome.runtime.onMessage.addListener((message, sender, respond) => {
+  api.runtime.onMessage.addListener((message, sender, respond) => {
     if (message?.type === 'npv:diagnostics') {
       const labels = chatLabels();
-      respond({ version: chrome.runtime.getManifest().version, ready,
+      respond({ version: api.runtime.getManifest().version, ready,
         chatMode: labels.some(label => label.matches('.seventv-chat-user-username')) ? '7TV' : 'Twitch',
         namesDetected: labels.length, popupDetected: Boolean(document.querySelector(POPUP)), lastError, lastLookup,
         saved: [...cache.values()].filter(entry => entry.reply.ok && entry.keep > Date.now()).length });
@@ -447,7 +449,7 @@
       cache.clear(); ids.clear();
       for (const badge of document.querySelectorAll('.npv-showcase-badge')) badge.remove();
       scheduleScan();
-      (chrome.storage?.local?.remove(SAVED) || Promise.resolve()).then(() => respond({ ok: true }), () => respond({ ok: false }));
+      (api.storage?.local?.remove(SAVED) || Promise.resolve()).then(() => respond({ ok: true }), () => respond({ ok: false }));
       return true;
     }
     if (message?.type === 'npv:ready') {
@@ -458,7 +460,7 @@
     }
   });
   loadSaved();
-  chrome.runtime.sendMessage({ type: 'npv:status' }).then(status => {
+  api.runtime.sendMessage({ type: 'npv:status' }).then(status => {
     ready = Boolean(status?.ready); scheduleScan();
   }).catch(() => {});
   new MutationObserver(mutations).observe(document.body, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['data-a-user', 'href'] });

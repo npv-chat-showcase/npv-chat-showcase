@@ -25,7 +25,7 @@ html{font-size:62.5%}body{font-size:14px}
 <p class="note">This preview uses sample cards. It does not connect to your Twitch account.</p>
 </main><script>
 const samples=[['Blau','Blau.webp','3178'],['Nakkida','Nakkida_V2.webp','3132'],['Deansocool','Deansocool.webp','5529']].map(([name,file,printNumber],i)=>({id:String(i),name,printNumber,edition:'normal',editionName:'Base',image:'https://nopixel-v-companion-cdn.com/cards/'+file,ultraRare:false}));
-window.chrome={runtime:{getManifest:()=>({version:'1.0.1'}),onMessage:{addListener(){}},sendMessage:async m=>m.type==='npv:status'?{ready:true}:{ok:true,value:{login:m.login,cards:m.login==='sample_viewer'?samples:[]}}}};
+window.chrome={runtime:{getManifest:()=>({version:'1.1.0'}),onMessage:{addListener(){}},sendMessage:async m=>m.type==='npv:status'?{ready:true}:{ok:true,value:{login:m.login,cards:m.login==='sample_viewer'?samples:[]}}}};
 document.querySelectorAll('.chat-line__username').forEach(node=>node.addEventListener('click',()=>{
 const name=node.querySelector('[data-a-user]').dataset.aUser;
 const popup=document.createElement('section');popup.className='viewer-card';

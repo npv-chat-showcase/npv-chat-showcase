@@ -1,6 +1,6 @@
-# Chrome Web Store listing — NpV Chat Showcase 1.0.1
+# Chrome Web Store listing — NpV Chat Showcase 1.1.0
 
-Copy each section into the matching field of the developer dashboard. Upload `dist/npv-chat-showcase-1.0.1.zip` (build it with `npm run package`).
+Copy each section into the matching field of the developer dashboard. Upload `dist/npv-chat-showcase-1.1.0.zip` (build it with `npm run package`).
 
 ## Store listing tab
 
@@ -100,4 +100,20 @@ Certify all three:
 
 - Fill in the contact line in `PRIVACY.md`, host it, and paste its link in the Privacy tab.
 - Review risk: the extension uses NoPixel's undocumented companion API through the overlay's session. Asking NoPixel for permission first (and mentioning it in the "Notes for the reviewer" field if they agree) lowers the chance of rejection or a later takedown.
-- Test the packaged build: unzip `dist/npv-chat-showcase-1.0.1.zip`, load it with **Load unpacked**, and check a live NoPixel stream with Twitch chat and with 7TV.
+- Test the packaged build: unzip `dist/npv-chat-showcase-1.1.0.zip`, load it with **Load unpacked**, and check a live NoPixel stream with Twitch chat and with 7TV.
+
+# Firefox Add-ons (addons.mozilla.org)
+
+Upload `dist/npv-chat-showcase-firefox-1.1.0.zip` at https://addons.mozilla.org/developers/ → **Submit a New Add-on** → **On this site**. It passes `web-ext lint` with no errors or warnings. It needs Firefox 140 or newer (Firefox for Android 142).
+
+- **Source code:** answer **No**. The package is the plain, unminified source, so Mozilla doesn't need a separate source upload.
+- **Name, summary, description:** reuse the Chrome texts above. The summary field allows up to 250 characters.
+- **Categories:** Social & Communication, or Games & Entertainment.
+- **License:** MIT License.
+- **Privacy policy:** paste the text of `store/PRIVACY.md` (Firefox has a text box, not a link field).
+- **Support site:** https://github.com/npv-chat-showcase/npv-chat-showcase/issues
+- **Data collection:** the manifest declares `websiteContent` as required, because Twitch usernames shown on the page are sent to NoPixel's companion API and Twitch to look up display cases. Firefox shows this at install.
+- **Notes to reviewer:** paste the Chrome "Test instructions" text.
+- **Screenshots:** the same `store/screenshot-*.png` files.
+
+Firefox reviews new add-ons too; updates get an automatic check and sometimes a manual review.

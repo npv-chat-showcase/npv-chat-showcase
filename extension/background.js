@@ -1,3 +1,5 @@
+// Firefox provides the promise-based `browser` namespace; Chrome provides `chrome` (and `browser` in newer versions).
+const api = globalThis.browser ?? globalThis.chrome;
 const frames = new Map();
 const ORIGIN = "https://nstuq90nghenyqwqme61jgvmtp253a.ext-twitch.tv";
 function frameSender(sender) {
@@ -10,10 +12,10 @@ function twitchSender(sender) {
   try { return sender.tab?.id !== undefined && sender.frameId === 0 && new URL(sender.url).origin === "https://www.twitch.tv"; }
   catch { return false; }
 }
-chrome.runtime.onMessage.addListener((message, sender, respond) => {
+api.runtime.onMessage.addListener((message, sender, respond) => {
   if (message?.type === "npv:frame-ready" && frameSender(sender)) {
     frames.set(sender.tab.id, sender.frameId);
-    chrome.tabs.sendMessage(sender.tab.id, { type: "npv:ready" }, { frameId: 0 }).catch(() => {});
+    api.tabs.sendMessage(sender.tab.id, { type: "npv:ready" }, { frameId: 0 }).catch(() => {});
     respond({ ok: true });
     return;
   }
@@ -29,7 +31,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     return;
   }
   const userId = /^\d{1,20}$/.test(message.userId || "") ? message.userId : undefined;
-  chrome.tabs.sendMessage(sender.tab.id, { type: "npv:frame-lookup", login: message.login, userId }, { frameId })
+  api.tabs.sendMessage(sender.tab.id, { type: "npv:frame-lookup", login: message.login, userId }, { frameId })
     .then(respond)
     .catch(() => {
       frames.delete(sender.tab.id);
@@ -38,6 +40,6 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   return true;
 });
 // Test builds 0.1.4-0.2.0 kept a temporary card log; remove it on update.
-chrome.runtime.onInstalled.addListener(() => { chrome.storage.local.remove(["npvDebugLog", "npvDebugCatalog"]).catch(() => {}); });
-chrome.tabs.onRemoved.addListener(tabId => frames.delete(tabId));
-chrome.tabs.onUpdated.addListener((tabId, change) => { if (change.status === "loading") frames.delete(tabId); });
+api.runtime.onInstalled.addListener(() => { api.storage.local.remove(["npvDebugLog", "npvDebugCatalog"]).catch(() => {}); });
+api.tabs.onRemoved.addListener(tabId => frames.delete(tabId));
+api.tabs.onUpdated.addListener((tabId, change) => { if (change.status === "loading") frames.delete(tabId); });

@@ -4,7 +4,7 @@ Chrome extension that adds a tier badge just before Twitch chat usernames **afte
 
 Unofficial; not affiliated with NoPixel or Twitch.
 
-**Install:** [Chrome Web Store](https://chromewebstore.google.com/detail/npv-chat-showcase/hakjccphjlggkhecdloianchdljgpjok)
+**Install:** [Chrome Web Store](https://chromewebstore.google.com/detail/npv-chat-showcase/hakjccphjlggkhecdloianchdljgpjok). Firefox 140+: download `npv-chat-showcase-firefox-<version>.zip` from [Releases](https://github.com/npv-chat-showcase/npv-chat-showcase/releases) until the Firefox Add-ons listing is live.
 
 ## Safety
 
@@ -18,6 +18,10 @@ The whole extension is the `extension/` folder: about 800 lines of plain JavaScr
 **Check the store build against this code:** install from the store, then open Chrome's extension folder (Windows: `%LOCALAPPDATA%\Google\Chrome\User Data\Default\Extensions\hakjccphjlggkhecdloianchdljgpjok\<version>`; macOS: `~/Library/Application Support/Google/Chrome/Default/Extensions/hakjccphjlggkhecdloianchdljgpjok/<version>`). Apart from the `_metadata` folder the store adds, its files match `extension/` at the tag for that version.
 
 ## Install locally
+
+Firefox: run `npm run package`, open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and pick `dist/npv-chat-showcase-firefox-<version>.zip`. Temporary add-ons are removed when Firefox closes. If badges don't appear, open `about:addons` → NpV Chat Showcase → **Permissions** and allow the Twitch sites.
+
+Chrome:
 
 1. Open `chrome://extensions` in Chrome and enable Developer mode.
 2. Click **Load unpacked** and select the `extension` folder in this workspace.
@@ -63,7 +67,7 @@ Click **NpV Chat Showcase** in Chrome's extensions menu. Its status popup shows 
 
 ## Publishing
 
-`npm run package` runs the tests, checks that every file the manifest references exists, and writes `dist/npv-chat-showcase-<version>.zip` with `manifest.json` at the root. Upload that ZIP in the Chrome Web Store developer dashboard.
+`npm run package` runs the tests, checks that every file the manifest references exists, and writes two ZIPs with `manifest.json` at the root: `dist/npv-chat-showcase-<version>.zip` for the Chrome Web Store and `dist/npv-chat-showcase-firefox-<version>.zip` for Firefox Add-ons. Both contain the same files; the Firefox manifest swaps the background service worker for a background script and adds the Firefox add-on ID, minimum version, and data-collection declaration. Check the Firefox build with `npx web-ext lint --source-dir <unzipped folder>`.
 
 `store/` holds the listing text, permission justifications and privacy answers (`LISTING.md`), the privacy policy to host at a public URL (`PRIVACY.md`), two 1280×800 screenshots and a 440×280 promo tile. The screenshots and tile are captures of `preview/store.html` (`?view=chat`, `?view=tiers`, `?view=promo`) with made-up chatter names. `python scripts/icons.py` redraws the extension icons in `extension/icons/`.
 
