@@ -1,0 +1,7 @@
+body { width: 310px; margin: 0; padding: 18px; background: #18181b; color: #efeff1; font: 13px/1.5 Arial, sans-serif; }
+h1 { font-size: 17px; margin: 0; color: #ff4081; }
+p { margin: 10px 0; }
+#version, #hint { color: #adadb8; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; }
+dt { color: #adadb8; } dd { margin: 0; overflow-wrap: anywhere; }
+button { background: #9146ff; color: white; border: 0; border-radius: 4px; padding: 8px 12px; cursor: pointer; }

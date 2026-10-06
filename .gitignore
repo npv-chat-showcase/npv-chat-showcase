@@ -1,0 +1,9 @@
+.research/
+node_modules/
+*.zip
+dist/
+.claude/
+kayklip-lookup.jpg
+preview/seventv-preview*.png
+preview/showcase-preview.jpg
+store/reddit-*

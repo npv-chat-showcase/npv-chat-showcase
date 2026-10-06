@@ -1,0 +1,24 @@
+See who's holding NoPixel cards, right in Twitch chat.
+
+NpV Chat Showcase reads the public NoPixel V Companion display case of people chatting on a NoPixel stream and adds a small tier badge before their name. Click a name to see their displayed cards, with art, edition and print number, inside the viewer card. Click a card to enlarge it.
+
+HOW TIERS WORK
+Print numbers count copies in pull order, so low numbers are scarce. Every card scores by its print number and edition (Gold, Foil, Base). The lowest prints (#1–#3) get an extra boost, and three copies of the same card add a bonus. The three cards together decide the display's tier:
+• Common: most displays
+• Rare: about 1 in 5
+• Epic: about 1 in 16
+• Legendary: about 1 in 160
+
+FEATURES
+• Works with Twitch's own chat and with 7TV
+• Badges for people you've seen before load instantly (saved on your computer for 24 hours)
+• Display case shown in the viewer card, with the date each card was pulled
+• Toolbar popup shows connection status and lets you clear saved badges
+
+REQUIREMENTS
+Open a live NoPixel stream that has the NoPixel V Companion video overlay enabled. The extension uses that overlay's existing session in the same tab. There is no separate login.
+
+PRIVACY
+No account, no tracking, no analytics. Saved badges stay in your browser. Nothing is sent to the developer.
+
+This is an unofficial fan-made extension. It is not affiliated with, endorsed by, or sponsored by NoPixel or Twitch. Print numbers are not leaderboard points.

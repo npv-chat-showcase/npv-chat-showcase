@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "NpV Chat Showcase",
+  "version": "1.0.1",
+  "description": "Tier badges in Twitch chat for NoPixel V Companion card display cases, plus the cards in viewer cards.",
+  "icons": { "16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png" },
+  "minimum_chrome_version": "111",
+  "background": { "service_worker": "background.js" },
+  "permissions": ["storage"],
+  "action": { "default_title": "NpV Chat Showcase status", "default_popup": "status.html",
+    "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" } },
+  "content_scripts": [
+    {
+      "matches": ["https://www.twitch.tv/*"],
+      "js": ["core.js", "chat.js"],
+      "css": ["chat.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://nstuq90nghenyqwqme61jgvmtp253a.ext-twitch.tv/*"],
+      "js": ["frame-relay.js"],
+      "all_frames": true,
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://nstuq90nghenyqwqme61jgvmtp253a.ext-twitch.tv/*"],
+      "js": ["core.js", "frame-api.js"],
+      "world": "MAIN",
+      "all_frames": true,
+      "run_at": "document_start"
+    }
+  ]
+}

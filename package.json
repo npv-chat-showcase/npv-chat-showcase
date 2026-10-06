@@ -1,0 +1,7 @@
+{
+  "name": "npv-chat-showcase",
+  "private": true,
+  "version": "1.0.1",
+  "scripts": { "test": "node --test tests/*.test.cjs", "package": "npm test && node scripts/package.cjs" },
+  "devDependencies": { "jsdom": "^26.1.0" }
+}

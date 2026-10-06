@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NpV Chat Showcase — prototype preview</title><link rel="stylesheet" href="../extension/chat.css">
+<style>
+body{margin:0;background:#0e0e10;color:#efeff1;font-family:Arial,sans-serif}main{max-width:850px;margin:60px auto;padding:24px}h1{font-size:28px}p{color:#adadb8;line-height:1.5}.workspace{display:grid;grid-template-columns:1fr 340px;gap:36px;margin-top:30px}.chat{padding:18px;background:#18181b;border:1px solid #29292e;border-radius:8px}.line{padding:8px 0;font-size:14px;line-height:1.5}.chat-line__username{font-weight:700;cursor:pointer;color:#37e7d1}.viewer-card{width:340px;background:#1f1f23;border:1px solid #39393f;border-radius:6px;overflow:hidden;box-shadow:0 12px 40px #0008}.header{background:#260e46;padding:18px;display:flex;justify-content:space-between}.header a{color:#efeff1;font-weight:700;text-decoration:none}.badges{padding:14px}.badges h3{margin:0 0 12px}.badge-row{display:flex;gap:8px}.fake-badge{background:#39393f;padding:5px;border-radius:3px}.note{font-size:12px}.label{color:#ff4081;font-size:12px;letter-spacing:1px;text-transform:uppercase}.npv-showcase-panel{margin:0}button{cursor:pointer}@media(max-width:700px){.workspace{grid-template-columns:1fr}.viewer-card{width:100%}}
+.seventv-chat-user-username{font-weight:700;cursor:pointer;color:#37e7d1}.seventv-user-card{display:grid;grid-template-rows:min-content 1fr;grid-template-areas:'header' 'data';grid-auto-flow:column;width:340px;max-height:480px;background:#1f1f23;border:1px solid #39393f;border-radius:6px;overflow:hidden}.seventv-user-card-header{grid-area:header}.seventv-user-card-data{grid-area:data}
+/* Emulate 7TV's scoped styles (UserCard.vue, UiScrollable.vue) loading after the extension stylesheet. */
+html{font-size:62.5%}body{font-size:14px}
+.seventv-user-card[data-seven]{grid-template-columns:1fr;grid-template-rows:min-content 1fr;grid-template-areas:'header' 'data';grid-auto-flow:column;max-height:48rem;width:37rem;overflow:visible;background:#1f1f23cc;backdrop-filter:blur(2rem)}
+.seventv-user-card-header[data-seven]{display:grid;grid-template-rows:1fr auto;grid-template-areas:'identity' 'states'}
+.seventv-user-card-identity[data-seven]{grid-area:identity;min-width:0;cursor:move}
+.seventv-user-card-interactive[data-seven]{grid-area:states}
+.seventv-user-card-data[data-seven]{grid-area:data;display:grid;grid-template-rows:1fr;max-height:26rem}
+.scrollable-container[data-seven]{overflow:hidden;position:relative}.scrollable-contents[data-seven]{height:100%;overflow-y:scroll}
+.history-line{padding:4px 8px}
+#popup-slot.dragging{position:fixed;z-index:9999}
+</style></head><body><main>
+<div class="label">Working UI preview · sample data</div><h1>NoPixel cards, right in chat</h1>
+<p>A card badge appears beside viewers with a display case. Click Sample_Viewer’s name to see the three cards in the viewer popup.</p>
+<button id="use-seven" type="button">Preview 7TV chat</button>
+<div class="workspace"><section class="chat"><strong>STREAM CHAT</strong>
+<div class="line"><span class="chat-line__username-container"><span class="chat-line__username" role="button" tabindex="0"><span data-a-target="chat-message-username" data-a-user="sample_viewer">Sample_Viewer</span></span></span>: i think so</div>
+<div class="line"><span class="chat-line__username-container"><span class="chat-line__username" role="button" tabindex="0"><span data-a-target="chat-message-username" data-a-user="example_empty">Example_Empty</span></span></span>: no cards on display yet</div>
+<p class="note">Badge color = whole display tier (gray common, blue rare, purple epic, orange legendary). The numbers on the cards are print numbers.</p></section><div id="popup-slot"></div></div>
+<p class="note">This preview uses sample cards. It does not connect to your Twitch account.</p>
+</main><script>
+const samples=[['Blau','Blau.webp','3178'],['Nakkida','Nakkida_V2.webp','3132'],['Deansocool','Deansocool.webp','5529']].map(([name,file,printNumber],i)=>({id:String(i),name,printNumber,edition:'normal',editionName:'Base',image:'https://nopixel-v-companion-cdn.com/cards/'+file,ultraRare:false}));
+window.chrome={runtime:{getManifest:()=>({version:'1.0.1'}),onMessage:{addListener(){}},sendMessage:async m=>m.type==='npv:status'?{ready:true}:{ok:true,value:{login:m.login,cards:m.login==='sample_viewer'?samples:[]}}}};
+document.querySelectorAll('.chat-line__username').forEach(node=>node.addEventListener('click',()=>{
+const name=node.querySelector('[data-a-user]').dataset.aUser;
+const popup=document.createElement('section');popup.className='viewer-card';
+const header=document.createElement('div');header.className='header';const link=document.createElement('a');link.href='/'+name;link.textContent=node.textContent;header.append(link);
+const close=document.createElement('button');close.textContent='×';close.setAttribute('aria-label','Close viewer card');close.onclick=()=>popup.remove();header.append(close);
+popup.append(header);const badges=document.createElement('div');badges.className='badges';badges.innerHTML='<h3>Badges</h3><div class="badge-row"><span class="fake-badge">♛</span><span class="fake-badge">★</span><span class="fake-badge">◆</span></div>';popup.append(badges);document.getElementById('popup-slot').replaceChildren(popup);
+}));
+document.getElementById('use-seven').onclick=()=>{
+document.getElementById('popup-slot').replaceChildren();
+document.querySelectorAll('.line').forEach((line,i)=>{
+const name=i===0?'sample_viewer':'example_empty';
+line.replaceChildren();
+const user=document.createElement('span');user.className='seventv-chat-user';
+const badges=document.createElement('span');badges.className='seventv-chat-user-badge-list';badges.textContent='★ ';
+const label=document.createElement('span');label.className='seventv-chat-user-username';label.textContent=i===0?'Sample_Viewer':'Example_Empty';
+user.append(badges,label);line.append(user,document.createTextNode(': hello'));
+label.onclick=()=>{
+const popup=document.createElement('section');popup.className='seventv-user-card';popup.setAttribute('data-seven','');
+popup.innerHTML='<div class="seventv-user-card-header" data-seven><div class="seventv-user-card-identity header" data-seven><a class="seventv-user-card-usertag"></a><button aria-label="Close viewer card">×</button></div><div class="seventv-user-card-interactive badges" data-seven><h3>Badges</h3><div class="badge-row"><span class="fake-badge">♛</span><span class="fake-badge">★</span><span class="fake-badge">◆</span></div></div></div><div class="seventv-user-card-data" data-seven><div class="scrollable-container" data-seven><div class="scrollable-contents" data-seven>'+Array.from({length:12},(_,i)=>'<div class="history-line">20:'+(10+i)+' '+label.textContent+': message history line '+(i+1)+'</div>').join('')+'</div></div></div>';
+const link=popup.querySelector('a');link.href='https://www.twitch.tv/'+name;link.textContent=label.textContent;
+popup.querySelector('button').onclick=()=>popup.remove();
+document.getElementById('popup-slot').replaceChildren(popup);
+dragFrom(popup.querySelector('.seventv-user-card-identity'));
+};
+});
+};
+// Like 7TV (vueuse useDraggable): only the identity strip starts a drag; moves follow window pointer events.
+function dragFrom(handle){
+const slot=document.getElementById('popup-slot');
+handle.addEventListener('pointerdown',event=>{
+if(event.button!==0)return;event.preventDefault();
+const rect=slot.getBoundingClientRect(),dx=event.clientX-rect.left,dy=event.clientY-rect.top;
+slot.classList.add('dragging');slot.style.left=rect.left+'px';slot.style.top=rect.top+'px';
+const move=e=>{slot.style.left=(e.clientX-dx)+'px';slot.style.top=(e.clientY-dy)+'px';};
+const up=()=>{removeEventListener('pointermove',move);removeEventListener('pointerup',up);};
+addEventListener('pointermove',move);addEventListener('pointerup',up);
+},true);
+}
+</script><script src="../extension/core.js"></script><script src="../extension/chat.js"></script>
+</body></html>

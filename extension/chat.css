@@ -1,0 +1,66 @@
+/* A capsule just before the username, so it never reads as another square Twitch / 7TV badge. */
+.npv-showcase-badge {
+  display: inline-flex; vertical-align: middle; align-items: center; justify-content: center;
+  box-sizing: border-box; width: 26px; height: 18px; margin: 0 4px 0 2px; padding: 0;
+  border: 1px solid color-mix(in srgb, var(--npv-tier) 70%, transparent); border-radius: 9px;
+  background: color-mix(in srgb, var(--npv-tier) 20%, #0e0e10); cursor: pointer; position: relative; top: -1px;
+}
+.npv-showcase-badge .npv-showcase-icon { width: 16px; height: 16px; }
+.npv-showcase-badge:hover .npv-showcase-icon, .npv-showcase-badge:focus-visible .npv-showcase-icon { transform: scale(1.18); }
+.npv-showcase-badge:focus-visible { outline: 2px solid var(--npv-tier); outline-offset: 1px; }
+/* Tier palette: front card, back card, emblem. */
+:is(.npv-showcase-badge, .npv-showcase-tier)[data-tier='common'] { --npv-tier: #a3a3ad; --npv-tier-back: #5d5d66; --npv-emblem: #3a3a41; --npv-tier-text: #111; }
+:is(.npv-showcase-badge, .npv-showcase-tier)[data-tier='rare'] { --npv-tier: #4aa3ff; --npv-tier-back: #1f5ea8; --npv-emblem: #fff; --npv-tier-text: #fff; }
+:is(.npv-showcase-badge, .npv-showcase-tier)[data-tier='epic'] { --npv-tier: #b47cff; --npv-tier-back: #6936c4; --npv-emblem: #fff; --npv-tier-text: #fff; }
+:is(.npv-showcase-badge, .npv-showcase-tier)[data-tier='legendary'] { --npv-tier: #ffbf3c; --npv-tier-back: #d0661c; --npv-emblem: #fff8dc; --npv-tier-text: #1a1206; }
+.npv-showcase-icon { display: block; overflow: visible; transition: transform 0.12s ease; }
+.npv-showcase-icon .npv-back { fill: var(--npv-tier-back); stroke: #0008; stroke-width: 0.7; }
+.npv-showcase-icon .npv-front { fill: var(--npv-tier); stroke: #000a; stroke-width: 0.8; }
+.npv-showcase-icon .npv-shine { fill: #fff; opacity: 0.28; }
+.npv-showcase-icon .npv-emblem { fill: var(--npv-emblem); }
+.npv-showcase-icon .npv-lines { fill: none; stroke: var(--npv-emblem); stroke-width: 0.9; stroke-linecap: round; }
+.npv-showcase-badge[data-tier='legendary'] { box-shadow: 0 0 6px #ffaa2c66; }
+[data-tier='legendary'] > .npv-showcase-icon { filter: drop-shadow(0 0 2.5px #ffaa2ccc); animation: npv-legendary 2.4s ease-in-out infinite; }
+@keyframes npv-legendary { 50% { filter: drop-shadow(0 0 4px #ffd36be6); } }
+@media (prefers-reduced-motion: reduce) { [data-tier='legendary'] > .npv-showcase-icon { animation: none; } }
+.npv-showcase-tier {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px 1px 3px; border-radius: 9px;
+  font-size: 11px; background: color-mix(in srgb, var(--npv-tier) 22%, #18181b); color: var(--npv-tier); border: 1px solid color-mix(in srgb, var(--npv-tier) 55%, transparent);
+}
+.npv-showcase-tier .npv-showcase-icon { width: 16px; height: 16px; }
+.npv-showcase-card-points { color: #efeff1; font-weight: 700; }
+.npv-showcase-pulled { display: block; color: #8b8b96; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.npv-showcase-panel {
+  box-sizing: border-box; margin-top: 12px; padding: 12px; width: 100%;
+  border-top: 1px solid #414147; color: #efeff1; background: #18181b; font: 12px/1.4 Arial, sans-serif;
+}
+.npv-showcase-heading { font-weight: 700; font-size: 13px; margin: 0 0 10px; display: flex; align-items: center; gap: 6px; }
+.npv-showcase-heading::before { content: '▱'; color: #ff4081; font-size: 18px; }
+.npv-showcase-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.npv-showcase-card { margin: 0; min-width: 0; }
+.npv-showcase-art { position: relative; aspect-ratio: 0.71; border-radius: 4px; overflow: hidden; background: #29292e; border: 1px solid #ff4081; }
+.npv-showcase-art[data-edition='legendary'] { border-color: #75caff; }
+.npv-showcase-art[data-edition='gold'] { border-color: #eac66a; box-shadow: 0 0 8px #b2872b44; }
+.npv-showcase-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.npv-showcase-print { position: absolute; top: 0; right: 0; background: #ff4081; color: white; font-size: 11px; padding: 2px 4px; font-weight: 700; }
+[data-edition='legendary'] .npv-showcase-print { background: #75caff; color: #111; }
+[data-edition='gold'] .npv-showcase-print { background: #eac66a; color: #111; }
+.npv-showcase-card figcaption { color: #adadb8; font-size: 10px; margin-top: 5px; }
+.npv-showcase-card-name { display: block; color: #efeff1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.npv-showcase-message { margin: 0; color: #adadb8; }
+.npv-showcase-art img { -webkit-user-drag: none; user-select: none; }
+.npv-showcase-panel.npv-showcase-in-7tv {
+  grid-column: 1 / -1; grid-row: auto; min-width: 0; margin-top: 0; padding: 8px 12px;
+  position: relative; z-index: 1; cursor: move; user-select: none;
+}
+.npv-showcase-in-7tv .npv-showcase-heading { margin-bottom: 6px; }
+.npv-showcase-in-7tv .npv-showcase-art { height: 90px; width: 64px; aspect-ratio: auto; cursor: pointer; }
+/* 7TV caps the card height; let its message history shrink and scroll instead of spilling past the card. */
+.seventv-user-card:has(> .seventv-user-card-header > .npv-showcase-panel) {
+  grid-template-rows: min-content minmax(0, 1fr); max-height: min(56rem, calc(100vh - 16px));
+}
+.seventv-user-card:has(> .seventv-user-card-header > .npv-showcase-panel) > .seventv-user-card-data { min-height: 0; overflow: hidden; }
+.npv-showcase-retry { margin-top: 8px; cursor: pointer; background: #9146ff; color: white; border: 0; border-radius: 3px; padding: 5px 9px; font: inherit; }
+.npv-showcase-preview { position: fixed; inset: 0; z-index: 2147483647; display: grid; place-items: center; background: #000b; }
+.npv-showcase-preview img { max-width: 85vw; max-height: 85vh; }
+.npv-showcase-preview button { position: absolute; top: 20px; right: 20px; background: #18181b; color: white; border: 1px solid #777; border-radius: 4px; padding: 8px 12px; cursor: pointer; }

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>NpV badge tiers — preview</title>
+<link rel="stylesheet" href="../extension/chat.css">
+<style>
+body{margin:0;background:#0e0e10;color:#efeff1;font:13px/20px Inter,Roobert,Arial,sans-serif;display:flex;gap:24px;padding:24px}
+.chat{width:300px;background:#18181b;border:1px solid #29292e;padding:8px 0}.light{background:#f7f7f8;color:#0e0e10}
+.line{padding:5px 12px}.badge{display:inline-block;width:18px;height:18px;border-radius:3px;vertical-align:middle;margin-right:4px;background:#3a3a3d}
+.chat-line__username{font-weight:700;cursor:pointer}
+</style></head><body>
+<div class="chat" id="dark"></div><div class="chat light" id="light"></div>
+<script>
+// Sample displays chosen to land in each tier with the real scoring code.
+const people={
+  common_viewer:[['normal',5000],['normal',6100],['normal',7037]],
+  rare_viewer:[['legendary',300],['legendary',380],['gold',120]],
+  epic_viewer:[['gold',5],['gold',67],['legendary',57]],
+  legendary_viewer:[['gold',1],['normal',93],['legendary',15]]
+};
+const colors={common_viewer:'#ff7f50',rare_viewer:'#1e90ff',epic_viewer:'#9acd32',legendary_viewer:'#daa520'};
+for(const id of ['dark','light'])document.getElementById(id).innerHTML=Object.keys(people).map(n=>
+`<div class="line"><span class="badge" style="background:#9146ff"></span><span class="badge" style="background:#e91916"></span><span class="chat-line__username"><span data-a-target="chat-message-username" data-a-user="${n}" style="color:${colors[n]}">${n}</span></span>: how much are houses in 5.0</div>`).join('');
+const cards=n=>people[n].map(([edition,p],i)=>({id:n+i,cardId:n+i,name:'Card',edition,editionName:{normal:'Base',legendary:'Foil',gold:'Gold'}[edition],printNumber:String(p),image:null,ultraRare:false}));
+window.chrome={runtime:{getManifest:()=>({version:'preview'}),onMessage:{addListener(){}},sendMessage:async m=>m.type==='npv:status'?{ready:true}:{ok:true,value:{login:m.login,cards:cards(m.login)}}}};
+</script><script src="../extension/core.js"></script><script src="../extension/chat.js"></script>
+</body></html>
